@@ -1,0 +1,227 @@
+
+<?php 
+   if(isset($_SESSION['useremail']))
+   { ?>
+<!doctype html>
+<html lang="zxx">
+   <head>
+      	<?php $this->load->view('includes/meta.php');?>
+      	<style>
+      	.yellow-btn a{
+      	    color:white!important;
+      	}
+      	.yellow-btn {
+      	    color:white!important;
+      	}
+      	</style>
+   </head>
+           <?php $this->load->view('includes/tag');?>
+
+   <body>
+      <?php $this->load->view('includes/header.php');?>
+       <!-- breadcrumb-area -->
+            <section class="breadcrumb-area breadcrumb-bg" data-background="assets/images/breadcrumb.png">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="breadcrumb-content text-center">
+                                <h2>Shopping Cart</h2>
+                                <nav aria-label="breadcrumb">
+                                    <ol class="breadcrumb">
+                                        <li class="breadcrumb-item"><a href="<?php echo base_url();?>">Home</a></li>
+                                        <li class="breadcrumb-item active" aria-current="page">Shopping Cart</li>
+                                    </ol>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- breadcrumb-area-end -->
+
+            <!-- shop-cart-area -->
+            <section class="shop-cart-area wishlist-area pt-100 pb-100">
+                <div class="container">
+               
+            <!----cart--->
+            <?php if(!empty($select_cart_data))
+            {?>
+            
+                    <div class="row justify-content-center">
+                                    
+
+                        <div class="col-lg-8">
+                                  <form action="<?php echo base_url('cart-insert'); ?>" method="post" id="cartFrm">
+                            <div class="table-responsive-xl">
+
+                                <table class="table mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th class="product-thumbnail"></th>
+                                            <th class="product-name">Product</th>
+                                            <th class="product-price">Price</th>
+                                            <th class="product-quantity">QUANTITY</th>
+                                            <th class="product-subtotal">SUBTOTAL</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach($select_cart_data as $fetch_cart)
+                                {?>
+                                        <tr>
+                                            
+
+                                            <td class="product-thumbnail">
+                                          <a href="<?php echo base_url('cart-delete/').urlencode(base64_encode($fetch_cart['cartID']));?>" class="remove" style="font-size:25px;" onclick="return confirm('Are you sure to delete this item?')"><i class="flaticon-cancel-1"></i></a>  <a href="<?php echo base_url();?>"><img src="<?php echo base_url()?>assets/images/products/<?php echo $fetch_cart['productImage'];?>" alt="" style="height:80px;width:auto;"></a>
+                                            </td>
+                                            <?php echo $fetch_cart['cartID'];?>
+                                            <td class="product-name">
+                                                <h4><a href="#"><?php echo $fetch_cart['productTitle'];?></a></h4>
+                                               <!-- <p>Cramond Leopard & Pythong Anorak</p>
+                                                <span>65% poly, 35% rayon</span>--->
+                                            </td>
+                                            <td class="product-price">Rs. <?php echo $fetch_cart['productMRP'];?></td>
+                                            <td class="product-quantity">
+                                                <div class="cart-plus">
+                                                    <form action="#">
+                                                        <div class="cart-plus-minus">
+                                                            <input type="text" value="<?php echo $fetch_cart['productQuantity'];?>">
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                            
+                                            <td class="product-subtotal"><span>Rs <?php echo $fetch_cart['productMRP'];?></span></td>
+                                            
+                                        </tr>
+                                      
+                                    </tbody>
+                                    
+                                    <!------cart start-------->
+                                     <input type="hidden" id="userid" name="userid" value="<?php echo $_SESSION['userID']; ?>" />  
+                                   <input type="hidden" id="productid" name="productid[]" value="<?php echo $fetch_cart['productID'];?> " /> 
+                                   <input type="hidden" id="categoryid" name="categoryid[]" value="<?php echo $fetch_cart['categoryID'];?> " /> 
+                                   <input type="hidden" id="title" name="title[]" value="<?php echo $fetch_cart['productTitle'];?> " /> 
+                                   <input type="hidden" id="image" name="image[]" value="<?php echo $fetch_cart['productImage'];?> " /> 
+                                   <input type="hidden" id="price" name="price[]" value="<?php echo $fetch_cart['productMRP'];?> " id="priceresult" /> 
+                                
+                                        <!--cart hidden data--->
+                                     <?php } ?>
+                                </table>
+                            </div>
+                            <div class="shop-cart-bottom mt-20">
+                                <div class="row">
+                                   <div class="col-md-7">
+                                    <!------------------>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <div class="continue-shopping">
+                                            <a href="<?php echo base_url();?>" class="btn">Continue Shopping</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            </form>
+                        </div>
+                        
+                        <div class="col-lg-4 col-md-8">
+                            <aside class="shop-cart-sidebar">
+                                <div class="shop-cart-widget">
+                                    <h6 class="title">Cart Totals</h6>
+                 <!--- <form action="#" method="post" id="cartFrm">--->
+                                        <ul>
+                                           <!--- <li><span>SUBTOTAL</span> $ 136.00</li>---->
+                                            <li>
+                                                <span>SHIPPING DETAILS</span>
+                                               <!--- <div class="shop-check-wrap">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox" class="custom-control-input" id="customCheck1">
+                                                        <label class="custom-control-label" for="customCheck1">FLAT RATE: RS. 99</label>
+                                                    </div>
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox" class="custom-control-input" id="customCheck2">
+                                                        <label class="custom-control-label" for="customCheck2">FREE SHIPPING</label>
+                                                    </div>
+                                                </div>---->
+                                            </li><br>
+                                            <li class="cart-total-amount"><span>Shipping Charge</span> <span class="amount">Free</span></li><br>
+                                              <li class="cart-total-amount"><span>Cart Total</span> <span class="amount">Rs. <?php echo $select_sum_data[0]['sum_product'];?></span></li><br>
+                                          
+                                        </ul>
+                                        
+                                        <!---cart hidden---->
+                                        
+                                        
+                                        
+                                        <?php//  echo $_SESSION['useremail'];?>
+                                        <br>
+                                       <!--- <a href="#" class="btn" id="cartfrmSubmit" style="color:white;">Proceed to Checkout</a>--->
+                
+                
+                <!---------------->
+                <br><br>
+                    
+                                   <!-- </form>--->
+                                    
+                
+                
+                <!--------->
+                <button class="yellow-btn btn" > <a href="<?php if(isset($_SESSION['useremail'])){ echo base_url('checkout'); } else { echo base_url('user-login'); }?>" class="default-btn" id="cartfrmSubmit">Proceed to Checkout</a></button>
+                    
+                <!-------->
+                                </div>
+                            </aside>
+                        </div>
+                    </div>
+                        
+                            
+ <?php } 
+            else
+            {?>
+            <div class="row">
+               <div class="col-lg-12 col-sm-12 col-md-12">
+                  <div class="cart-totals mt-4 text-center">
+                     <h1>No Record Found</h1>
+                  </div>
+               </div>
+            </div>
+            <?php } ?>
+        
+                    <!---end cart--->
+                </div>
+            </section>
+            <!-- shop-cart-area-end -->
+
+        
+         </div>
+      </section>
+      <?php $this->load->view('includes/footer.php');?>
+    
+    		           <?php $this->load->view('includes/script');?>
+
+    <script>
+          $("a#cartfrmSubmit").click(function(e){
+              e.preventDefault();
+              $("form#cartFrm").submit();
+              
+          })
+      </script>
+     <!------------script----------->
+                                            <script>
+function myFunction() {
+ var discount= document.getElementById("per").value;
+ var mrp= document.getElementById("mrp").value;
+ var result=mrp-mrp*discount/100;
+ alert(result);
+document.getElementById("priceresult").innerHTML = result;
+
+ 
+ 
+}
+</script>
+<!---------------------->
+    
+   </body>
+</html>
+<?php }else{?>
+   <script> window.location.href='<?php echo base_url('user-login');?>'</script>
+<?php }?>
