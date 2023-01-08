@@ -57,7 +57,7 @@ class Checkout extends CI_Controller
 	{
 
 		if ($_POST) {
-			$total=0;
+			$phonepeTotal=0;
 			$_POST['userID'] =  $this->session->userdata('userID');
 			$orderID = $this->db->insert('tbl_orders', $_POST);
 
@@ -68,7 +68,7 @@ class Checkout extends CI_Controller
 
 
 					$find['order_id'] =  $orderID;
-					$total+=$find['cartPrice'];
+					$phonepeTotal+=(double)$find['productMRP'];
 					unset($find['cartID']);
 					unset($find['cartPrice']);
 					unset($find['cartIP']);
@@ -76,6 +76,8 @@ class Checkout extends CI_Controller
 					unset($find['cartStatus']);
 					unset($find['cartEditedDate']);
 					$orderID = $this->db->insert('tbl_order_items', $find);
+
+					
 				}
 			}
 			extract($_POST);
@@ -134,11 +136,11 @@ class Checkout extends CI_Controller
 			$shipment_id = '';//$d->shipment_id ? $d->shipment_id : '';
 			$this->db->update('tbl_orders', array('shipment_id' => $shipment_id));
 
-			$this->db->query('delete FROM `tbl_cart` where userID=' . $_SESSION['userID']);
+			//$this->db->query('delete FROM `tbl_cart` where userID=' . $_SESSION['userID']);
 			$this->session->set_flashdata('info_message_success', 'Thanks for Order');
 			//redirect(base_url('home'));
-
-			$this->handle($orderID,1);
+			
+			$this->handle($orderID,$phonepeTotal);
 		}
 	}
 
@@ -197,14 +199,14 @@ class Checkout extends CI_Controller
 			],
 		]);
 
-
 		$result = json_decode($response->getBody(), true);
 
 		print_r($result);
+		$rawResponse = json_encode($result);
 
 		if ($result['success'] == 1) {
 
-			$data = array('merchant_transaction_id' => $merchantTransactionId,'payment_code' => $result['code']);
+			$data = array('merchant_transaction_id' => $merchantTransactionId,'payment_code' => $result['code'],"raw_response" => $rawResponse);
 			$this->db->where('id', $payment_id);
         	$this->db->update('tbl_payments',$data);
 			
