@@ -144,7 +144,7 @@ class Checkout extends CI_Controller
 		}
 	}
 
-	public function handle($order_id, $amount)
+	public function handle($orderID,$amount)
 	{
 
 		$amount = (double)$amount; // string to double
@@ -161,12 +161,8 @@ class Checkout extends CI_Controller
 		define('saltIndex', '1');
 		define('payApiUrl', 'https://api-preprod.phonepe.com/apis/hermes/pg/v1/pay');
 
-		$data = array('order_id' => $order_id,'amount' => $amount);
-		$this->db->insert('tbl_payments',$data);
-		$insert_id = $this->db->insert_id();
-		$payment_id = $insert_id;
 
-		$merchantTransactionId = 'MTID' . $payment_id . date("Ymdhis");
+		$merchantTransactionId = 'MTID' . $user_id. date("Ymdhis");
 
 		$data = [
 			"merchantId" => merchantId,
@@ -206,9 +202,8 @@ class Checkout extends CI_Controller
 
 		if ($result['success'] == 1) {
 
-			$data = array('merchant_transaction_id' => $merchantTransactionId,'payment_code' => $result['code'],"raw_response" => $rawResponse);
-			$this->db->where('id', $payment_id);
-        	$this->db->update('tbl_payments',$data);
+			$data = array('order_id' => $orderID,'merchant_transaction_id' => $merchantTransactionId,'amount'=>$amount ,'payment_code' => $result['code'],"raw_response" => $rawResponse);
+        	$query=$this->db->insert('tbl_payments',$data);
 			
 			$url = $result['data']['instrumentResponse']['redirectInfo']['url'];
 			header("Location: $url");

@@ -15,9 +15,7 @@ class Payment extends CI_Controller
 		);
 	}
 
-	public function index()
-	{
-	}
+
 	public function redirect()
 	{
 
@@ -30,15 +28,18 @@ class Payment extends CI_Controller
 			$amount = $_POST['amount'] / 100;
 
 			if ($code == 'PAYMENT_SUCCESS') {
-				$message = $_POST['message'];
-				$merchantTransactionId = $_POST['data']['merchantTransactionId'];
-				$transactionId = $_POST['data']['transactionId'];
 
-				$data = array("transactionId" => $transactionId, 'payment_code' => $code, "raw_response" => $rawResponse);
+				$merchantTransactionId = $_POST['transactionId'];
+				$transactionId = $_POST['providerReferenceId'];
+
+				$data = array("transaction_id" => $transactionId, 'payment_code' => $code, "raw_response" => $rawResponse);
 				$this->db->where('merchant_transaction_id', $merchantTransactionId);
 				$this->db->update('tbl_payments', $data);
 
-				echo  '<script>alert("success")</script>';	
+				//echo  '<script>alert("success")</script>';	
+				$this->success();
+
+				
 			} else {
 
 				$merchantTransactionId = $_POST['transactionId'];
@@ -54,6 +55,13 @@ class Payment extends CI_Controller
 			echo  '<script>alert("something went wrong")</script>';	
 		}
 
+	}
+
+	public function success()
+	{
+		$data['title']='';
+		$data['description']='';
+		$this->load->view('order_completed',$data);
 	}
 
 	public function callback()
